@@ -90,6 +90,7 @@ try
 
     setx PATH "$env:PATH;${env:ProgramFiles(x86)}\Git\cmd;"
 
+
     $virtPlatform = (gwmi Win32_ComputerSystem).Model
     Write-Host "Virtual platform: $virtPlatform"
     # TODO: Add XenServer / XCP

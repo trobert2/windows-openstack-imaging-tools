@@ -33,13 +33,13 @@ try
 
     # Get-WUInstall -AcceptAll -IgnoreReboot -IgnoreUserInput -NotCategory "Language packs"
 
-    if (Get-WURebootStatus -Silent)
-    {
-        $Host.UI.RawUI.WindowTitle = "Updates installation finished. Rebooting."
-        shutdown /r /t 0
-    }
-    else
-    {
+    # if (Get-WURebootStatus -Silent)
+    # {
+    #     $Host.UI.RawUI.WindowTitle = "Updates installation finished. Rebooting."
+    #     shutdown /r /t 0
+    # }
+    # else
+    # {
         $Host.UI.RawUI.WindowTitle = "Downloading Cloudbase-Init..."
 
         $osArch = (Get-WmiObject  Win32_OperatingSystem).OSArchitecture
@@ -71,16 +71,27 @@ try
         }
 
         #added git installation
-        $GitMsi = "Git-1.9.0-preview20140217.exe"
+        # $GitMsi = "Git-1.9.0-preview20140217.exe"
 
-        $GitInstallPath = "$ENV:Temp\$GitMsi"
-        $GitMsiUrl = "https://msysgit.googlecode.com/files/Git-1.9.0-preview20140217.exe"
+        # $GitInstallPath = "$ENV:Temp\$GitMsi"
+        # $GitMsiUrl = "https://msysgit.googlecode.com/files/Git-1.9.0-preview20140217.exe"
 
-        (new-object System.Net.WebClient).DownloadFile($GitMsiUrl, $GitInstallPath)
+        # (new-object System.Net.WebClient).DownloadFile($GitMsiUrl, $GitInstallPath)
 
-        cmd.exe /C call $GitInstallPath /SILENT
+        # cmd.exe /C call $GitInstallPath /SILENT
 
-        setx PATH "$env:PATH;${env:ProgramFiles(x86)}\Git\cmd;"
+        # setx PATH "$env:PATH;${env:ProgramFiles(x86)}\Git\cmd;"
+
+        #replace git code with newest code
+        $CloudbaseInitInstalationFolder = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\Python27\Lib\site-packages\cloudbaseinit"
+        Remove-Item -Force -Recurse $CloudbaseInitInstalationFolder
+
+        git clone "https://github.com/trobert2/cloudbase-init.git" $env:TMP"\cloudbase"
+        cd $env:TMP"\cloudbase"
+        git checkout tests_with_mock
+        cd ~
+        Move-Item -Force $env:TMP"\cloudbase\cloudbaseinit" $CloudbaseInitInstalationFolder
+
 
          # We're done, remove LogonScript and disable AutoLogon
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name Unattend*
@@ -93,7 +104,7 @@ try
         $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
         & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/shutdown `/unattend:"$unattendedXmlPath"
     }
-}
+# }
 catch
 {
     $host.ui.WriteErrorLine($_.Exception.ToString())
