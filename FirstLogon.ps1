@@ -72,8 +72,23 @@ $logonScriptPath = "$ENV:SystemRoot\Temp\Logon.ps1"
 try
 {
     $Host.UI.RawUI.WindowTitle = "Downloading Logon script..."
-    $baseUrl = "https://raw.github.com/cloudbase/windows-openstack-imaging-tools/master"
+    $baseUrl = "https://raw.github.com/trobert2/windows-openstack-imaging-tools/master"
     (new-object System.Net.WebClient).DownloadFile("$baseUrl/Logon.ps1", $logonScriptPath)
+
+
+    #added git installation 
+    $Host.UI.RawUI.WindowTitle = "Downloading and installing git script..."
+
+    $GitMsi = "Git-1.9.0-preview20140217.exe"
+
+    $GitInstallPath = "$ENV:Temp\$GitMsi"
+    $GitMsiUrl = "https://msysgit.googlecode.com/files/Git-1.9.0-preview20140217.exe"
+
+    (new-object System.Net.WebClient).DownloadFile($GitMsiUrl, $GitInstallPath)
+
+    cmd.exe /C call $GitInstallPath /SILENT
+
+    setx PATH "$env:PATH;${env:ProgramFiles(x86)}\Git\cmd;"
 
     $virtPlatform = (gwmi Win32_ComputerSystem).Model
     Write-Host "Virtual platform: $virtPlatform"

@@ -177,7 +177,7 @@
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
-                    <Path>powershell -NoLogo -Command "(new-object System.Net.WebClient).DownloadFile('https://raw.github.com/cloudbase/windows-openstack-imaging-tools/master/Specialize.ps1', 'c:\Windows\Temp\Specialize.ps1')"</Path>
+                    <Path>powershell -NoLogo -Command "(new-object System.Net.WebClient).DownloadFile('https://raw.github.com/trobert2/windows-openstack-imaging-tools/master/Specialize.ps1', 'c:\Windows\Temp\Specialize.ps1')"</Path>
                     <Description>Download Specialize script</Description>
                 </RunSynchronousCommand>
                 <RunSynchronousCommand wcm:action="add">
