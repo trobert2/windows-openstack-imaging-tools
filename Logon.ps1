@@ -84,14 +84,14 @@ try
 
         #replace git code with newest code
         $CloudbaseInitInstalationFolder = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\Python27\Lib\site-packages\cloudbaseinit"
+        $CloneDir = "$env:TMP\cloudbase"
         Remove-Item -Force -Recurse $CloudbaseInitInstalationFolder
 
-        git clone "https://github.com/trobert2/cloudbase-init.git" $env:TMP"\cloudbase"
-        cd $env:TMP"\cloudbase"
-        git checkout tests_with_mock
+        git clone "https://github.com/trobert2/cloudbase-init.git" $CloneDir
+        cd $CloneDir
+        git checkout nits_pep8
         cd ~
-        Move-Item -Force $env:TMP"\cloudbase\cloudbaseinit" $CloudbaseInitInstalationFolder
-
+        Move-Item -Force $CloneDir\cloudbaseinit $CloudbaseInitInstalationFolder
 
          # We're done, remove LogonScript and disable AutoLogon
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name Unattend*
