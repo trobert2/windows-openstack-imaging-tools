@@ -8,7 +8,7 @@ fi
 
 BASEDIR=$(dirname $0)
 
-FLOPPY_IMAGE=$BASEDIR/Autounattend.vfd
+FLOPPY_IMAGE=/root/Autounattend.vfd
 CONTENT_SRC=$BASEDIR/Autounattend.xml
 
 TMP_FLOPPY_IMAGE=`/bin/mktemp`
@@ -16,12 +16,14 @@ TMP_MOUNT_PATH=`/bin/mktemp -d`
 
 rm -rf $TMP_MOUNT_PATH
 rm -f $TMP_FLOPPY_IMAGE
-dd if=/dev/zero of=$TMP_FLOPPY_IMAGE bs=1k count=1440
+dd if=/dev/zero of=$TMP_FLOPPY_IMAGE bs=1k count=3440
 mkfs.vfat $TMP_FLOPPY_IMAGE
 
 mkdir $TMP_MOUNT_PATH
 mount -t vfat -o loop $TMP_FLOPPY_IMAGE $TMP_MOUNT_PATH
 cp $CONTENT_SRC $TMP_MOUNT_PATH
+scp -r root@192.168.247.164:/var/jenkins/workspace/Test_cloudbase-init_plugins/cloudbase-init/cloudbaseinit /root/
+cp -r /root/cloudbaseinit $TMP_MOUNT_PATH
 
 umount $TMP_MOUNT_PATH
 rmdir $TMP_MOUNT_PATH
