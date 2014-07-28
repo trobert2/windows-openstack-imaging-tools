@@ -79,8 +79,8 @@ try
         # cd $CloneDir
         # git checkout nits_pep8
         # cd ~
-        
-     #   Move-Item -Force A:\\cloudbaseinit $CloudbaseInitInstalationFolder
+        # Move-Item -Force A:\\cloudbaseinit $CloudbaseInitInstalationFolder
+
         $Host.UI.RawUI.WindowTitle = "Adding rules for winrm..."
         New-NetFirewallRule -DisplayName "Allow winrm http" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow
         New-NetFirewallRule -DisplayName "Allow winrm https" -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow
@@ -91,12 +91,14 @@ try
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name Unattend*
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoLogonCount
 
-        $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
-        & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
+        # $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
+        # & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
 
-        $Host.UI.RawUI.WindowTitle = "Running Sysprep..."
-        $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
-        & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/shutdown `/unattend:"$unattendedXmlPath"
+        $Host.UI.RawUI.WindowTitle = "Running Sysprep..."        
+        $unattendXMLUrl = "https://raw.githubusercontent.com/trobert2/windows-openstack-imaging-tools/master/Unattend.xml"
+        $unattendXMLPath = "$ENV:Temp\Unattend.xml"
+        (new-object System.Net.WebClient).DownloadFile($unattendXMLUrl, $unattendXMLPath)
+        & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/shutdown `/unattend:"$unattendXMLPath"
     }
 # }
 catch
