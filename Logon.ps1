@@ -16,7 +16,7 @@ try
     $unattendXMLPath = "$ENV:Temp\Unattend.xml"
     (new-object System.Net.WebClient).DownloadFile($unattendXMLUrl, $unattendXMLPath)
     & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/shutdown `/unattend:"$unattendXMLPath"
-}   
+}
 catch
 {
     $host.ui.WriteErrorLine($_.Exception.ToString())
