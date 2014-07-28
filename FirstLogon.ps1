@@ -75,7 +75,6 @@ try
     $baseUrl = "https://raw.github.com/trobert2/windows-openstack-imaging-tools/master"
     (new-object System.Net.WebClient).DownloadFile("$baseUrl/Logon.ps1", $logonScriptPath)
 
-
     #added git installation 
     $Host.UI.RawUI.WindowTitle = "Downloading and installing git script..."
 
