@@ -1,3 +1,4 @@
+#generate image and add to glance
 IMAGE=/root/windows-server-2012-r2.qcow2
 FLOPPY=/root/Autounattend.vfd
 VIRTIO_ISO=/root/windows-openstack-imaging-tools/virtio-win-0.1-81.iso

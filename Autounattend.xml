@@ -140,6 +140,18 @@
                     </LocalAccount>
                 </LocalAccounts>
                 -->
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Description>CiAdmin user</Description>
+                        <DisplayName>CiAdmin</DisplayName>
+                        <Group>Administrators;Users</Group>
+                        <Name>CiAdmin</Name>
+                        <Password>
+                            <Value>Passw0rd</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                    </LocalAccount>    
+                </LocalAccounts>
             </UserAccounts>
             <AutoLogon>
                 <Password>
@@ -183,6 +195,15 @@
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
                     <Path>powershell -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -File C:\Windows\Temp\Specialize.ps1</Path>
+                    <Description>Run Specialize script</Description>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+<!--                     <Credentials>
+                        <Username>Administrator</Username>
+                        <Password>Passw0rd</Password>
+                    </Credentials>    -->
+                    <Order>3</Order>
+                    <Path>cmd /c winrm quickconfig -q -transport:http</Path>
                     <Description>Run Specialize script</Description>
                 </RunSynchronousCommand>
             </RunSynchronous>

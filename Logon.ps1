@@ -40,49 +40,54 @@ try
      # }
      # else
      # {
-        $Host.UI.RawUI.WindowTitle = "Downloading Cloudbase-Init..."
+     #   $Host.UI.RawUI.WindowTitle = "Downloading Cloudbase-Init..."
 
-        $osArch = (Get-WmiObject  Win32_OperatingSystem).OSArchitecture
-        if($osArch -eq "64-bit")
-        {
-            $CloudbaseInitMsi = "CloudbaseInitSetup_Beta_x64.msi"
-            $programFilesDir = ${ENV:ProgramFiles(x86)}
-        }
-        else
-        {
-            $CloudbaseInitMsi = "CloudbaseInitSetup_Beta_x86.msi"
-            $programFilesDir = $ENV:ProgramFiles
-        }
+     #   $osArch = (Get-WmiObject  Win32_OperatingSystem).OSArchitecture
+     #   if($osArch -eq "64-bit")
+     #   {
+     #       $CloudbaseInitMsi = "CloudbaseInitSetup_Beta_x64.msi"
+     #       $programFilesDir = ${ENV:ProgramFiles(x86)}
+     #   }
+     #   else
+     #   {
+     #       $CloudbaseInitMsi = "CloudbaseInitSetup_Beta_x86.msi"
+     #       $programFilesDir = $ENV:ProgramFiles
+     #   }
 
-        $CloudbaseInitMsiPath = "$ENV:Temp\$CloudbaseInitMsi"
-        $CloudbaseInitMsiUrl = "http://www.cloudbase.it/downloads/$CloudbaseInitMsi"
-        $CloudbaseInitMsiLog = "$ENV:Temp\CloudbaseInitSetup_Beta.log"
+     #   $CloudbaseInitMsiPath = "$ENV:Temp\$CloudbaseInitMsi"
+     #   $CloudbaseInitMsiUrl = "http://www.cloudbase.it/downloads/$CloudbaseInitMsi"
+     #   $CloudbaseInitMsiLog = "$ENV:Temp\CloudbaseInitSetup_Beta.log"
 
-        (new-object System.Net.WebClient).DownloadFile($CloudbaseInitMsiUrl, $CloudbaseInitMsiPath)
+     #   (new-object System.Net.WebClient).DownloadFile($CloudbaseInitMsiUrl, $CloudbaseInitMsiPath)
 
-        $Host.UI.RawUI.WindowTitle = "Installing Cloudbase-Init..."
+     #   $Host.UI.RawUI.WindowTitle = "Installing Cloudbase-Init..."
 
-        $serialPortName = @(Get-WmiObject Win32_SerialPort)[0].DeviceId
+     #   $serialPortName = @(Get-WmiObject Win32_SerialPort)[0].DeviceId
 
-        $p = Start-Process -Wait -PassThru -FilePath msiexec -ArgumentList "/i $CloudbaseInitMsiPath /qn /l*v $CloudbaseInitMsiLog LOGGINGSERIALPORTNAME=$serialPortName"
-        if ($p.ExitCode -ne 0)
-        {
-            throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
-        }
+     #   $p = Start-Process -Wait -PassThru -FilePath msiexec -ArgumentList "/i $CloudbaseInitMsiPath /qn /l*v $CloudbaseInitMsiLog LOGGINGSERIALPORTNAME=$serialPortName"
+     #   if ($p.ExitCode -ne 0)
+     #   {
+     #       throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
+     #   }
 
-        #replace git code with newest code
-        $CloudbaseInitInstalationFolder = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\Python27\Lib\site-packages\cloudbaseinit"
-        $CloneDir = "$env:TMP\cloudbase"
-        Remove-Item -Force -Recurse $CloudbaseInitInstalationFolder
+     #   #replace git code with newest code
+     #   $CloudbaseInitInstalationFolder = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\Python27\Lib\site-packages\cloudbaseinit"
+     #   $CloneDir = "$env:TMP\cloudbase"
+     #   Remove-Item -Force -Recurse $CloudbaseInitInstalationFolder
 
         # git clone "https://github.com/trobert2/cloudbase-init.git" $CloneDir
         # cd $CloneDir
         # git checkout nits_pep8
         # cd ~
         
-        Move-Item -Force A:\\cloudbaseinit $CloudbaseInitInstalationFolder
-
+     #   Move-Item -Force A:\\cloudbaseinit $CloudbaseInitInstalationFolder
+        $Host.UI.RawUI.WindowTitle = "Adding rules for winrm..."
+        New-NetFirewallRule -DisplayName "Allow winrm http" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow
+        New-NetFirewallRule -DisplayName "Allow winrm https" -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow
+        New-NetFirewallRule -DisplayName "Allow winrm http" -Direction Outbound -LocalPort 5985 -Protocol TCP -Action Allow
+        New-NetFirewallRule -DisplayName "Allow winrm https" -Direction Outbound -LocalPort 5986 -Protocol TCP -Action Allow
          # We're done, remove LogonScript and disable AutoLogon
+
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name Unattend*
         Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoLogonCount
 
