@@ -25,9 +25,16 @@ function SetAdminOnlyACL($path) {
 
 $opensslPath = "$ENV:HOMEDRIVE\OpenSSL-Win32"
 
+function VerifyHash($filename, $expectedHash) {
+    $hash = (Get-FileHash -Algorithm SHA1 $filename).Hash
+    if ($hash -ne $expectedHash) {
+        throw "SHA1 hash not valid for file: $filename"
+    }
+}
+
 function InstallOpenSSL() {
     if (!(Test-Path $opensslPath)) {
-        $filename = "Win32OpenSSL_Light-1_0_1g.exe"
+        $filename = "Win32OpenSSL_Light-1_0_1h.exe"
         Invoke-WebRequest -Uri "http://slproweb.com/download/$filename" -OutFile $filename
 
         VerifyHash $filename "910EB0864831FE34C09FBE975F5090B3F9883CCB"
