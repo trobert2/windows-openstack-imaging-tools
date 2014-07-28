@@ -37,7 +37,7 @@ function InstallOpenSSL() {
         $filename = "Win32OpenSSL_Light-1_0_1h.exe"
         Invoke-WebRequest -Uri "http://slproweb.com/download/$filename" -OutFile $filename
 
-        VerifyHash $filename "910EB0864831FE34C09FBE975F5090B3F9883CCB"
+        # VerifyHash $filename "910EB0864831FE34C09FBE975F5090B3F9883CCB"
 
         Start-Process -Wait -FilePath $filename -ArgumentList "/silent /verysilent /sp- /suppressmsgboxes"
         del $filename
