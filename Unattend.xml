@@ -24,7 +24,7 @@
           <Path>"dir"</Path>
           <Description>Run sysprep</Description>
           <WillReboot>Always</WillReboot>
-        </RunSynchronousCommand> -->
+        </RunSynchronousCommand>
       </RunSynchronous>
     </component>
   </settings>
