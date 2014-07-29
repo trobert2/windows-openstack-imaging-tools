@@ -123,4 +123,3 @@ $SetupWinRMAccessSelfSignedLUrl = "https://raw.github.com/trobert2/windows-opens
 $SetupWinRMAccessSelfSignedPath = "$ENV:Temp\SetupWinRMAccessSelfSigned.ps1"
 (new-object System.Net.WebClient).DownloadFile($SetupWinRMAccessSelfSignedLUrl, $SetupWinRMAccessSelfSignedPath)
 powershell -ExecutionPolicy RemoteSigned -File $SetupWinRMAccessSelfSignedPath
-powershell -ExecutionPolicy RemoteSigned -File $SetupWinRMAccessSelfSignedPath
