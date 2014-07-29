@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $opensslPath = "$ENV:HOMEDRIVE\OpenSSL-Win32"
+$base_dir="C:\OpenSSL-Win32\"
 
 function VerifyHash($filename, $expectedHash) {
     $hash = (Get-FileHash -Algorithm SHA1 $filename).Hash
@@ -22,7 +23,7 @@ function InstallOpenSSL() {
 }
 
 function GenerateSelfSignedCertificate($certFilePfx, $pfxPassword) {
-    $opensslConf = "openssl_server_auth.cnf"
+    $opensslConf = "$base_dir\openssl_server_auth.cnf"
 
     Set-Content $opensslConf @"
 distinguished_name  = req_distinguished_name
@@ -33,8 +34,8 @@ extendedKeyUsage = serverAuth
 [v3_ca]
 "@
 
-    $certFilePem = "server_cert.pem"
-    $keyFilePem = "server_cert.key"
+    $certFilePem = "$base_dir\server_cert.pem"
+    $keyFilePem = "$base_dir\server_cert.key"
 
     $openssl = "$opensslPath\bin\openssl.exe"
     $subject = "/C=RO/ST=Timis/L=Timisoara/emailAddress=fake@email.com/organizationName=Cloudbase/CN=$ENV:COMPUTERNAME"
