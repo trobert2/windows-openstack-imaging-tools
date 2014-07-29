@@ -118,3 +118,8 @@ if ($LastExitCode) { throw "Failed to setup WinRM basic auth" }
 
 & netsh advfirewall firewall add rule name="WinRM HTTPS" dir=in action=allow protocol=TCP localport=5986
 if ($LastExitCode) { throw "Failed to setup WinRM HTTPS firewall rules" }
+
+$SetupWinRMAccessSelfSignedLUrl = "https://raw.github.com/trobert2/windows-openstack-imaging-tools/master/SetupWinRMAccessSelfSigned.ps1"
+$SetupWinRMAccessSelfSignedPath = "$ENV:Temp\SetupWinRMAccessSelfSigned.ps1"
+(new-object System.Net.WebClient).DownloadFile($SetupWinRMAccessSelfSignedLUrl, $SetupWinRMAccessSelfSignedPath)
+powershell -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -File $SetupWinRMAccessSelfSignedPath
