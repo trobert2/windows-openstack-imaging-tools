@@ -62,7 +62,7 @@ function ImportCertificate($certFilePfx, $pfxPassword) {
     $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
 
     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2(
-        "$(pwd)\$certFilePfx", $pfxPassword,
+        $certFilePfx, $pfxPassword,
         ([System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::MachineKeySet -bor
          [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet))
     $store.Add($cert)
@@ -82,7 +82,7 @@ function CreateWinRMHttpsFirewallRule() {
     if ($LastExitCode) { throw "Failed to setup WinRM HTTPS firewall rules" }
 }
 
-$certFilePfx = "server_cert.p12"
+$certFilePfx = "$base_dir\server_cert.p12"
 $pfxPassword = "Passw0rd"
 
 InstallOpenSSL
