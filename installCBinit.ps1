@@ -31,6 +31,7 @@ try
     {
         throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
     }
+    shutdown -f -r -t 0
 }
 catch
 {
