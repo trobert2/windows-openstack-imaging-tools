@@ -1,4 +1,30 @@
+param
+(
+    [bool]$newCode = $False,
+    [string]$serviceType = 'http'
+)
+
 $ErrorActionPreference = "Stop"
+
+function replaceCloudbaseInitCode([string]$programFiles) {
+    $path = "$programFiles\Cloudbase Solutions\Cloudbase-Init\Python27\Lib\site-packages\CLOUDB~1"
+
+    # rm -Force -Recurse $path
+    # copy code over either via git command or samba share
+}
+
+function setService([string]$programFiles) {
+    $path = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf"
+
+    if ($serviceType -eq 'http') {
+        $value = "metadata_services=cloudbaseinit.metadata.services.httpservice.HttpService"
+    } elseif ($serviceType -eq 'configdrive') {
+        $value = "metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService"
+    } elseif ($serviceType -eq 'ec2') {
+            $value = "metadata_services=cloudbaseinit.metadata.services.ec2service.EC2Service"
+    }
+    ((Get-Content $path) + $value) | Set-content $path
+}
 
 try
 {
@@ -31,10 +57,22 @@ try
     {
         throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
     }
+
+    if ($newCode)
+    {
+        replaceCloudbaseInitCode $programFilesDir
+    }
+
+    if ($serviceType)
+    {
+        setService $programFilesDir
+    }
+
     $Host.UI.RawUI.WindowTitle = "Running Sysprep..."
     $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
     & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/shutdown `/unattend:"$unattendedXmlPath"
 }
+
 catch
 {
     $host.ui.WriteErrorLine($_.Exception.ToString())
